@@ -1,4 +1,4 @@
-function chunkText(text,filename){
+function chunkText(text,filename,chunkSize=800){
     //split chunks into paragraphs much better that split in 500 char blindly
     const paragraphs=text.split(/\n\n+/);
 
@@ -11,7 +11,7 @@ function chunkText(text,filename){
 
         if(cleanParagraph.length===0)continue//skips empty paragraphs
 
-        if((currentChunk+cleanParagraph).length<800){
+        if((currentChunk+cleanParagraph).length<chunkSize){
             currentChunk+=cleanParagraph+" ";
 
         }else{
