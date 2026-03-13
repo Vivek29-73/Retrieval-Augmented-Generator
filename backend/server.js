@@ -6,6 +6,7 @@ const cors=require("cors");
 const auth=require("./routes/auth");
 const document=require("./routes/documents");
 const { createCollection } = require("./utils/vectorDB")
+const ask=require("./routes/ask");
 
 const app=express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use(cors({
 //to check or to transfer req to different routes or paths
 app.use("/api/auth",auth);
 app.use("/api/documents",document);
+app.use("/api/ask",ask)
 
 //connection with mongodb database
 mongoose.connect(process.env.MONGODB_URI).
