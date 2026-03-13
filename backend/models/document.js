@@ -1,9 +1,9 @@
 const mongoose=require("mongoose");
-
+const User=require("./user")
 const documentSchema=new mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:User,
+        ref:"User",
         required:true
     },
     filename:{
@@ -17,7 +17,7 @@ const documentSchema=new mongoose.Schema({
         default:0
     },
     status:{
-        tpye:String,
+        type:String,
         enum:["processing","ready","failed"],
         default:"processing"
     }

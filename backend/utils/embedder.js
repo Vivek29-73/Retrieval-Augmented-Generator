@@ -1,27 +1,48 @@
-async function generateEmbeddings(text){
+const { pipeline } = require("@xenova/transformers")
 
-    const response= await fetch(
-    "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2",
-    {
-    
-        method:"POST",
-        headers:{
-            Authorization:`Bearer ${process.env.HF_TOKEN}`,
-            "Content-Type":"application/json"
-        },
-        body: JSON.stringify({inputs:text})//minilmv2 model accepts in texts or string foemat
-                                //inputs is what HUgging face api expects
+let embedder = null
+
+
+async function getEmbedder() {
+    // if embedder already loaded return it directly
+    if(embedder){
+      
+        return embedder
     }
-)
 
-if(!response.ok){
-    throw new Error(`embedding failed : ${response.status} ${response.statusText}`)
+ 
+    embedder = await pipeline(
+        "feature-extraction",
+        // feature-extraction = convert text to vector
+        "Xenova/all-MiniLM-L6-v2"
+    )
+    return embedder
 }
 
-const vector=await response.json()//response arrives as raw text. response.json() parses it into a JavaScript array of numbers.
-   
-return vector;
+
+async function generateEmbeddings(text) {
+
+    // get model (loads first time, cached after)
+    const embed = await getEmbedder()
+
+    const result = await embed(text, {
+        pooling: "mean",
+        // pooling = how to combine all token vectors
+             // into one single vector
+        normalize: true
+        // normalize = scale vector values between -1 and 1
+        
+    })
+
+    const vector = Array.from(result.data)
+    
+
+    console.log(`generated vector of size: ${vector.length}`)
+    // should always print 384
+
+    return vector
 }
+
 
 //loops through each chunk and embeds each one
 async function embedChunks(chunks){
@@ -30,7 +51,11 @@ async function embedChunks(chunks){
 
     for(const chunk of chunks){
         //send chunk text to get its vector
-        const vector=await generateEmbeddings(chunk.text);
+        const vector=await generateEmbeddings(chunk.text);//if use promise and map the chunks ,goo for large docs
+                                                        //then it will give all embedding for chunk at once 
+                                                        //this may be used if there are like modre(50-100)chunks
+                                                        //so each chunk line by line takes some extar time so use 
+                                                        //use promise,send req simultanusly,wait for all to finishreturn all at once
 
         //add this vector to chunk object
         embeddedChunks.push({
@@ -46,4 +71,4 @@ async function embedChunks(chunks){
     return embeddedChunks;// same array as input but each chunk now has vector
 }
 
-module.exports={generateEmbeddings,embeddedChunks};
+module.exports={generateEmbeddings,embedChunks};

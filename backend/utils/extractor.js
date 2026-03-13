@@ -21,4 +21,4 @@ async function extractText(file){
 
 } 
 
-module.exports=extractText;
+module.exports={extractText};
