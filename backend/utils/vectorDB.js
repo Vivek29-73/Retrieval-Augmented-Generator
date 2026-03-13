@@ -55,11 +55,11 @@ async function storeChunks(embeddedChunks,userId,documentId){
     await qdrant.upsert(COLLECTION,{points})//upsert = insert if new, update if exists
 }
 
-async function searchChunks(queryVector,userId) {
+async function searchChunks(queryVector,userId,limit=5) {
     const results=await qdrant.search(COLLECTION,{
         vector:queryVector,//question converted to 384 no.,qdrant find whose vector are close to this
-        limit:5, //top 5 simialr chunks
-        with_payload:true,
+        limit:limit, //top 5 simialr chunks
+        withPayload:true,
         filter:{
             must:[{
                 key:"userId",
