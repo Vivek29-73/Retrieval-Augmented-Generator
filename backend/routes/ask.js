@@ -5,8 +5,9 @@ const {validateQuery}=require("../utils/validator");
 const {generateEmbeddings}=require("../utils/embedder");
 const {searchChunks}=require("../utils/vectorDB")
 const {askLLm, askLLM}=require("../utils/llm")
+const History=require("../models/history");
 
-
+//api/ask/  route
 router.post("/",protect,async(req,res)=>{
     try{
         const {question}=req.body;
@@ -32,15 +33,43 @@ router.post("/",protect,async(req,res)=>{
 
         const answer=await askLLM(cleanQuestion,relevantChunks);//sends question + relevant(top 5 chunks)
         
-        res.json({
-            answer:answer,
-            sources:relevantChunks.map(chunk=>({
+        const sources=relevantChunks.map((chunk)=>({
                 filename:chunk.source,
                 score:chunk.score
-            }))//display "Answer from HR_Policy.pdf"
+            }))
+
+            //save to mongodb after getting the answer
+        await History.create({
+            userId:req.user._id,//object directly(not toString)
+            question:cleanQuestion,
+            answer:answer,
+            sources:sources
         })
+
+        //sent respose to frontened
+        res.json({
+            answer:answer,
+            sources:sources
+            })//display "Answer from HR_Policy.pdf"
+      
     }catch(err){
         res.status(500).json({error:err.message})
+    }
+});
+
+//api/ask/hsitory->route
+
+router.get("/history",protect,async(req,res)=>{
+    try{
+        //find all conversation for this user
+
+        const history=await History.find({userId:req.user._id})
+        .sort({createdAt:-1})//newest first
+        .limit(20);
+    
+        res.json({history});
+    }catch(err){
+        res.status(500).json({error:err.message});
     }
 });
 

@@ -27,8 +27,9 @@ async function askLLM(question,chunks){
     -Answer based only on the context provided above
     -If the answer is not in the context say "I could not find this information in your documents"
     -Be consise and clear
-    -Mention which source the answer came from `//based only on context"prvents AI hallucination"
-
+    -Do not mention source names and filenames in your answer
+    -Do NOT say "Source 1" or "Source 2" or any filename in your answer
+    -Just give the answer directly without referencing where it came from`// //based only on context"prvents AI hallucination"
     //send to qroq
     const response =await groq.chat.completions.create({
         model:"llama-3.1-8b-instant",//8b->8 billion params 8192->context window (how much text it can read)
