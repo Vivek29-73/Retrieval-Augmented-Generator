@@ -23,7 +23,7 @@ async function createCollection(){
                     distance:"Cosine"//angle bw two vec,small angle =>more similar meaning
                 }
             })
-            console.log("qdrant collection created")
+          
         }
         else {
             console.log("Qdrant collection already exists");

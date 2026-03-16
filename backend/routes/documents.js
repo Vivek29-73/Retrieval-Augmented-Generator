@@ -36,10 +36,13 @@ router.post("/upload",protect,upload.array("documents",10),async(req,res)=>{
         const errors=[];
 
         //process each file one by one
-        console.log(1);
+   
         for(const file of files){
 
             try{
+                //for taking rest time by the minilmv2 embeeder for another file
+         await new Promise(resolve=>setTimeout(resolve,500))
+
                 const extracted=await extractText(file);
               
                 validateDocument(extracted.text);
@@ -88,7 +91,7 @@ router.post("/upload",protect,upload.array("documents",10),async(req,res)=>{
 
 router.get("/my-documents", protect, async(req, res) => {
     try {
-        console.log(`fetching documents for user: ${req.user._id}`)
+      
 
         const docs = await Document.find({
             userId: req.user._id,
@@ -99,7 +102,7 @@ router.get("/my-documents", protect, async(req, res) => {
         // sort newest first
         // -1 means descending order
 
-        console.log(`found ${docs.length} documents`)
+        
 
         res.json({ documents: docs })
 

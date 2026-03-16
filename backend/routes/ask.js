@@ -19,7 +19,7 @@ router.post("/",protect,async(req,res)=>{
         //Embedding  the question
         const questionVector=await generateEmbeddings(cleanQuestion);
         
-        //search for relavant chunks top 5,filtered by uder id
+        //search for relavant chunks top 3,filtered by uder id
         const relevantChunks=await searchChunks(questionVector,userId,3);
     
         if(relevantChunks.length===0){

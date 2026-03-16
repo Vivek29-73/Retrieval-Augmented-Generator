@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 //to check cors principle,without this cant send req to other origins
 app.use(cors({
-    origin:"http://localhost:3000",
+    origin:["http://localhost:3001","http://localhost:5173"],
     credentials:true//if not then cookies cant be send by browser(frontend) to backend
 }));
 

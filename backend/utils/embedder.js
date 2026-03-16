@@ -35,9 +35,6 @@ async function generateEmbeddings(text) {
     })
 
     const vector = Array.from(result.data)
-    
-
-    console.log(`generated vector of size: ${vector.length}`)
     // should always print 384
 
     return vector
@@ -47,9 +44,11 @@ async function generateEmbeddings(text) {
 //loops through each chunk and embeds each one
 async function embedChunks(chunks){
 
+   
     const embeddedChunks=[];
 
     for(const chunk of chunks){
+        
         //send chunk text to get its vector
         const vector=await generateEmbeddings(chunk.text);//if use promise and map the chunks ,goo for large docs
                                                         //then it will give all embedding for chunk at once 
@@ -66,9 +65,13 @@ async function embedChunks(chunks){
             // everything same as before
             // just vector added on top
         })
+
+        //for taking rest time by the minilmv2 embeeder for another file
+         await new Promise(resolve=>setTimeout(resolve,500))
     }
 
     return embeddedChunks;// same array as input but each chunk now has vector
+
 }
 
 module.exports={generateEmbeddings,embedChunks};
