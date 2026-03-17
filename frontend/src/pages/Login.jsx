@@ -11,9 +11,16 @@ function Login() {
     const navigate = useNavigate()
 
     async function handleLogin() {
-        // basic validation
+        // 1. Check if fields are empty
         if(!email || !password) {
             setError("please fill all fields")
+            return
+        }
+
+        // 2. Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(email)) {
+            setError("please enter a valid email address")
             return
         }
 
@@ -24,7 +31,6 @@ function Login() {
 
         if(data.success) {
             navigate("/dashboard")
-            // redirect to dashboard after login
         } else {
             setError(data.error || "login failed")
         }

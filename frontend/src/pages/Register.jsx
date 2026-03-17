@@ -13,8 +13,26 @@ function Register() {
     const navigate = useNavigate()
 
     async function handleRegister() {
+        // 1. Check if fields are empty
         if(!name || !email || !password) {
             setError("please fill all fields")
+            return
+        }
+
+        // 2. Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(email)) {
+            setError("please enter a valid email address")
+            return
+        }
+
+        // 3. Validate password strength
+        if (password.length < 6) {
+            setError("password must be at least 6 characters long")
+            return
+        }
+        if (!/\d/.test(password)) {
+            setError("password must contain at least one number")
             return
         }
 
@@ -26,7 +44,6 @@ function Register() {
         if(data.success) {
             setSuccess("registered successfully! redirecting to login...")
             setTimeout(() => navigate("/"), 2000)
-            // wait 2 seconds then redirect to login
         } else {
             setError(data.error || "registration failed")
         }

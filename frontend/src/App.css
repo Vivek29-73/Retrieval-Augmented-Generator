@@ -72,16 +72,21 @@ body {
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 .auth-box button:hover {
     background: #5a52d5;
 }
 
+.auth-box button:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
 .auth-box button:disabled {
     background: #444;
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .auth-box p {
@@ -147,6 +152,10 @@ body {
     color: white;
 }
 
+.logout-btn:active {
+    transform: scale(0.96);
+}
+
 /* TABS */
 .tabs {
     display: flex;
@@ -168,6 +177,10 @@ body {
 .tab:hover {
     border-color: #6c63ff;
     color: #e0e0e0;
+}
+
+.tab:active {
+    transform: scale(0.96);
 }
 
 .tab.active {
@@ -253,6 +266,10 @@ input[type="file"]:hover {
     color: white;
 }
 
+.delete-btn:active {
+    transform: scale(0.96);
+}
+
 /* TEXTAREA */
 textarea {
     padding: 14px;
@@ -285,16 +302,21 @@ textarea:focus {
     cursor: pointer;
     font-size: 14px;
     width: fit-content;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 .tab-content button:hover {
     background: #5a52d5;
 }
 
+.tab-content button:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
 .tab-content button:disabled {
     background: #444;
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* ANSWER BOX */
