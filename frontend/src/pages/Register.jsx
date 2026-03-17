@@ -10,23 +10,23 @@ function Register() {
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
     const [loading, setLoading] = useState(false)
+    const [isPressed, setIsPressed] = useState(false)
     const navigate = useNavigate()
 
-    async function handleRegister() {
-        // 1. Check if fields are empty
+    async function handleRegister(e) {
+        e.preventDefault() // Stops the page from refreshing when you hit Enter
+
         if(!name || !email || !password) {
             setError("please fill all fields")
             return
         }
 
-        // 2. Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(email)) {
             setError("please enter a valid email address")
             return
         }
 
-        // 3. Validate password strength
         if (password.length < 6) {
             setError("password must be at least 6 characters long")
             return
@@ -59,30 +59,40 @@ function Register() {
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
 
-                <input
-                    type="text"
-                    placeholder="Full Name"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                />
+                <form 
+                    onSubmit={handleRegister}
+                    onKeyDown={(e) => { if (e.key === 'Enter') setIsPressed(true) }}
+                    onKeyUp={(e) => { if (e.key === 'Enter') setIsPressed(false) }}
+                >
+                    <input
+                        type="text"
+                        placeholder="Full Name"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                    />
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                    />
 
-                <button onClick={handleRegister} disabled={loading}>
-                    {loading ? "registering..." : "Register"}
-                </button>
+                    <button 
+                        type="submit" 
+                        className={isPressed ? "pressed" : ""} 
+                        disabled={loading}
+                    >
+                        {loading ? "registering..." : "Register"}
+                    </button>
+                </form>
 
                 <p>
                     Have account? <Link to="/">Login here</Link>

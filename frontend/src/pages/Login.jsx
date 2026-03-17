@@ -8,16 +8,17 @@ function Login() {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const [isPressed, setIsPressed] = useState(false)
     const navigate = useNavigate()
 
-    async function handleLogin() {
-        // 1. Check if fields are empty
+    async function handleLogin(e) {
+        e.preventDefault() // Stops the page from refreshing when you hit Enter
+
         if(!email || !password) {
             setError("please fill all fields")
             return
         }
 
-        // 2. Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(email)) {
             setError("please enter a valid email address")
@@ -45,23 +46,33 @@ function Login() {
 
                 {error && <p className="error">{error}</p>}
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                />
+                <form 
+                    onSubmit={handleLogin}
+                    onKeyDown={(e) => { if (e.key === 'Enter') setIsPressed(true) }}
+                    onKeyUp={(e) => { if (e.key === 'Enter') setIsPressed(false) }}
+                >
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                    />
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                    />
 
-                <button onClick={handleLogin} disabled={loading}>
-                    {loading ? "logging in..." : "Login"}
-                </button>
+                    <button 
+                        type="submit" 
+                        className={isPressed ? "pressed" : ""} 
+                        disabled={loading}
+                    >
+                        {loading ? "logging in..." : "Login"}
+                    </button>
+                </form>
 
                 <p>
                     No account? <Link to="/register">Register here</Link>
