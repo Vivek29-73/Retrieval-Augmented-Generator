@@ -60,6 +60,7 @@ async function searchChunks(queryVector,userId,limit=5) {
         vector:queryVector,//question converted to 384 no.,qdrant find whose vector are close to this
         limit:limit, //top 5 simialr chunks
         withPayload:true,
+        withVector:true,//return actual 384 numbers needed for syst3 variance cheeck among chunks embeddings
         filter:{
             must:[{
                 key:"userId",
@@ -72,9 +73,11 @@ async function searchChunks(queryVector,userId,limit=5) {
     return results.map(result=>({
         text:result.payload.text,
         source:result.payload.source,
-        score:result.score // score = similarity between 0 and 1
+        score:result.score ,// score = similarity between 0 and 1
                             // 1 = identical meaning
                             // 0 = completely unrelated
+        chunkIndex: result.payload.chunkIndex,//positin of chunk in doc ,used to show where ans come from
+        vector: result.vector //for comparing chunks in sys three
     }))
 
     
