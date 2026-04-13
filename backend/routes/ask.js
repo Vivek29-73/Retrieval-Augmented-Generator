@@ -4,7 +4,7 @@ const protect=require("../middleware/auth")
 const {validateQuery}=require("../utils/validator");
 const {generateEmbeddings}=require("../utils/embedder");
 const {searchChunks}=require("../utils/vectorDB")
-const {askLLm, askLLM}=require("../utils/llm")
+const {askLLM}=require("../utils/llm")
 const History=require("../models/history");
 
 //api/ask/  route

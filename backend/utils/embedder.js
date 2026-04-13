@@ -50,7 +50,7 @@ async function embedChunks(chunks){
     for(const chunk of chunks){
         
         //send chunk text to get its vector
-        const vector=await generateEmbeddings(chunk.text);//if use promise and map the chunks ,goo for large docs
+        const vector=await generateEmbeddings(chunk.text);//if use promise and map the chunks ,good for large docs
                                                         //then it will give all embedding for chunk at once 
                                                         //this may be used if there are like modre(50-100)chunks
                                                         //so each chunk line by line takes some extar time so use 

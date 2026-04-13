@@ -24,4 +24,4 @@ const documentSchema=new mongoose.Schema({
 
 },{timestamps:true});
 
-module.exports=mongoose.model("Documnet",documentSchema);
+module.exports=mongoose.model("Document",documentSchema);
